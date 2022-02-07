@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dementiev_a.homecontroller.sensors.Configs
 import com.dementiev_a.homecontroller.sensors.SensorFactory
 import com.dementiev_a.homecontroller.shared_preferences.SharedPreferencesService
 import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
@@ -31,6 +32,7 @@ import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
 
 class MainActivity : ComponentActivity() {
     private lateinit var sensorFactory: SensorFactory
+    private lateinit var sps: SharedPreferencesService
     private val sensorTypes = mapOf(
         "Освещение" to Sensor.TYPE_LIGHT,
         "Гироскоп" to Sensor.TYPE_GYROSCOPE,
@@ -46,9 +48,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sps = SharedPreferencesService(baseContext)
+        sps = SharedPreferencesService(baseContext)
+        sensorFactory = SensorFactory(getSystemService(Context.SENSOR_SERVICE) as SensorManager)
+    }
+
+    override fun onStart() {
+        super.onStart()
         if (sps.hasUserKey()) {
-            sensorFactory = SensorFactory(getSystemService(Context.SENSOR_SERVICE) as SensorManager)
             render { Settings() }
         } else {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -84,7 +90,9 @@ class MainActivity : ComponentActivity() {
         ) {
             Button(
                 shape = RoundedCornerShape(50),
-                onClick = { render { SensorValues() } }
+                onClick = {
+                    render { SensorValues() }
+                }
             ) {
                 Text(text = "Запустить")
             }
@@ -93,24 +101,30 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun SensorValues() {
+        Configs.key = sps.getKey()
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
             for ((name, type) in sensorTypes) {
-                val valueState = remember { mutableStateOf("") }
-                val colorState = remember { mutableStateOf(Color.Black) }
-                if (sensorFactory.createSensor(type, valueState, colorState)) {
-                    Text(
-                        text = "$name: ${valueState.value}",
-                        fontSize = 24.sp,
-                        lineHeight = 30.sp,
-                        color = colorState.value
-                    )
-                }
+                Sensor(name, type)
             }
         }
         sensorFactory.registerAll()
+    }
+
+    @Composable
+    private fun Sensor(name: String, type: Int) {
+        val valueState = remember { mutableStateOf("") }
+        val colorState = remember { mutableStateOf(Color.Black) }
+        if (sensorFactory.createSensor(name, type, valueState, colorState)) {
+            Text(
+                text = "$name: ${valueState.value}",
+                fontSize = 24.sp,
+                lineHeight = 30.sp,
+                color = colorState.value
+            )
+        }
     }
 }

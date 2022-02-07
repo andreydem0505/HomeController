@@ -8,13 +8,15 @@ import androidx.compose.runtime.MutableState
 class SensorFactory(private val sensorManager: SensorManager) {
     private var sensorsMap = mutableMapOf<Sensor, SensorListener>()
 
-    fun createSensor(sensorType: Int,
-                     valueReference: MutableState<String>,
-                     colorReference: MutableState<Color>
+    fun createSensor(
+        name: String,
+        type: Int,
+        valueReference: MutableState<String>,
+        colorReference: MutableState<Color>
     ): Boolean {
-        val sensor = sensorManager.getDefaultSensor(sensorType)
+        val sensor = sensorManager.getDefaultSensor(type)
         if (sensor != null) {
-            sensorsMap[sensor] = SensorListener(valueReference, colorReference)
+            sensorsMap[sensor] = SensorListener(name, valueReference, colorReference)
             return true
         }
         return false

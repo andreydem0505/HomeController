@@ -5,10 +5,12 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import androidx.compose.runtime.MutableState
+import com.dementiev_a.homecontroller.requests.Requests
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
 class SensorListener(
+    private val name: String,
     private var valueReference: MutableState<String>,
     private var colorReference: MutableState<Color>
 ) : SensorEventListener {
@@ -20,14 +22,14 @@ class SensorListener(
 
     override fun onSensorChanged(event: SensorEvent?) {
         val currentValues = event?.values!!
-        if (System.currentTimeMillis() - lastChanged > Constants.ULTIMATE_TIME_MILLIS) {
+        if (System.currentTimeMillis() - lastChanged > Configs.ULTIMATE_TIME_MILLIS) {
             danger()
         } else {
-            if (framesProcessed < Constants.ANALYZER_CAPACITY) {
+            if (framesProcessed < Configs.ANALYZER_CAPACITY) {
                 analyze(currentValues)
                 framesProcessed++
-                if (framesProcessed == Constants.ANALYZER_CAPACITY) {
-                    ultimateDifference *= Constants.DEFAULT_COEFFICIENT
+                if (framesProcessed == Configs.ANALYZER_CAPACITY) {
+                    ultimateDifference *= Configs.DEFAULT_COEFFICIENT
                     framesProcessed++
                 }
             } else {
@@ -54,7 +56,7 @@ class SensorListener(
 
     private fun danger() {
         if (lastDanger != null) {
-            if (System.currentTimeMillis() - lastDanger!! < Constants.DANGER_DELAY) {
+            if (System.currentTimeMillis() - lastDanger!! < Configs.DANGER_DELAY) {
                 return
             }
         }
@@ -62,6 +64,7 @@ class SensorListener(
 
         colorReference.value = Color.Red
         thread {
+            Requests.notify(Configs.key!!, name)
             Thread.sleep(5_000)
             colorReference.value = Color.Black
         }

@@ -3,10 +3,7 @@ package com.dementiev_a.homecontroller
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -25,7 +22,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dementiev_a.homecontroller.requests.Requests
+import com.dementiev_a.homecontroller.shared_preferences.SharedPreferencesService
 import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
 import kotlin.concurrent.thread
 
@@ -42,7 +41,7 @@ class LoginActivity : ComponentActivity() {
                         modifier = Modifier.padding(20.dp),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Link()
+                        Instruction()
                         KeyInput()
                     }
                 }
@@ -51,23 +50,39 @@ class LoginActivity : ComponentActivity() {
     }
 
     @Composable
+    private fun Instruction() {
+        Column (
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(text = "Зарегистрируйтесь через Telegram:")
+            Link()
+            Text(text = "2) Нажмите start и получите ключ")
+            Text(text = "3) Введите ключ в поле ниже")
+        }
+    }
+
+    @Composable
     private fun Link() {
         val uriHandler = LocalUriHandler.current
-        ClickableText(
-            text = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = Color.Blue,
-                        textDecoration = TextDecoration.Underline
-                    )
-                ) {
-                    append("Зарегистрироваться через Telegram")
+        Row {
+            Text(text = "1) ")
+            ClickableText(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            color = Color.Blue,
+                            textDecoration = TextDecoration.Underline,
+                            fontSize = 16.sp
+                        )
+                    ) {
+                        append("Перейдите в бота")
+                    }
+                },
+                onClick = {
+                    uriHandler.openUri("https://t.me/HomeControllerTeleBot")
                 }
-            },
-            onClick = {
-                uriHandler.openUri("https://t.me/HomeControllerTeleBot")
-            }
-        )
+            )
+        }
     }
 
     @Composable
@@ -76,12 +91,18 @@ class LoginActivity : ComponentActivity() {
         OutlinedTextField(
             value = text,
             modifier = Modifier.padding(0.dp, 20.dp),
+            singleLine = true,
             onValueChange = {
                 text = it
                 if (text.length == 20) {
                     thread {
-                        if (Requests.verifyKey(text).body()?.result!!) {
-                            println("---------OK----------")
+                        val response = Requests.verifyKey(text)
+                        if (response.code() == 200) {
+                            if (response.body()?.result!!) {
+                                val sps = SharedPreferencesService(baseContext)
+                                sps.saveKey(text)
+                                finish()
+                            }
                         }
                     }
                 }},
