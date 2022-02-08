@@ -29,7 +29,7 @@ class SensorListener(
                 analyze(currentValues)
                 framesProcessed++
                 if (framesProcessed == Configs.ANALYZER_CAPACITY) {
-                    ultimateDifference *= Configs.DEFAULT_COEFFICIENT
+                    ultimateDifference *= Configs.scaleCoefficient!!
                     framesProcessed++
                 }
             } else {
