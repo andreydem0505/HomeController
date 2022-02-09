@@ -7,6 +7,7 @@ class SharedPreferencesService(context: Context) {
     companion object {
         const val USER_KEY = "key"
         const val SCALE_COEFFICIENT = "scale_coefficient"
+        const val DELAY = "delay"
     }
 
     private var sp: SharedPreferences = context.getSharedPreferences(
@@ -31,6 +32,19 @@ class SharedPreferencesService(context: Context) {
         val result = getInt(SCALE_COEFFICIENT)
         return if (result == -1) {
             3
+        } else {
+            result
+        }
+    }
+
+    fun saveDelay(delay: Int) {
+        putInt(DELAY, delay)
+    }
+
+    fun readDelay(): Int {
+        val result = getInt(DELAY)
+        return if (result == -1) {
+            0
         } else {
             result
         }
