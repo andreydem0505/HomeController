@@ -1,9 +1,6 @@
 package com.dementiev_a.homecontroller
 
-import android.content.Context
 import android.content.Intent
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,7 +19,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dementiev_a.homecontroller.sensors.Configs
-import com.dementiev_a.homecontroller.sensors.SensorFactory
 import com.dementiev_a.homecontroller.shared_preferences.SharedPreferencesService
 import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
 import kotlinx.coroutines.delay
@@ -30,25 +26,11 @@ import java.lang.NumberFormatException
 
 
 class MainActivity : ComponentActivity() {
-    private lateinit var sensorFactory: SensorFactory
     private lateinit var sps: SharedPreferencesService
-    private val sensorTypes = mapOf(
-        "Освещение" to Sensor.TYPE_LIGHT,
-        "Гироскоп" to Sensor.TYPE_GYROSCOPE,
-        "Влажность" to Sensor.TYPE_RELATIVE_HUMIDITY,
-        "Ускорение" to Sensor.TYPE_ACCELEROMETER,
-        "Вес" to Sensor.TYPE_GRAVITY,
-        "Магнитное поле" to Sensor.TYPE_MAGNETIC_FIELD,
-        "Расстояние" to Sensor.TYPE_PROXIMITY,
-        "Температура" to Sensor.TYPE_AMBIENT_TEMPERATURE,
-        "Движение" to Sensor.TYPE_MOTION_DETECT,
-        "Давление" to Sensor.TYPE_PRESSURE
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sps = SharedPreferencesService(baseContext)
-        sensorFactory = SensorFactory(getSystemService(Context.SENSOR_SERVICE) as SensorManager)
     }
 
     override fun onStart() {
@@ -60,17 +42,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        sensorFactory.unregisterAll()
-    }
-
     private val minScaleCoefficient = 1
     private val maxScaleCoefficient = 10
 
     @Composable
     private fun Settings() {
-        val scaleCoefficientText = rememberSaveable { mutableStateOf(sps.readScaleCoefficient().toString()) }
+        var scaleCoefficient by rememberSaveable { mutableStateOf(sps.readScaleCoefficient().toString()) }
         val scaleCoefficientValidation = {
             text: String -> try {
                 text.toInt() in minScaleCoefficient..maxScaleCoefficient
@@ -78,45 +55,46 @@ class MainActivity : ComponentActivity() {
                 false
             }
         }
-        val delayText = rememberSaveable { mutableStateOf(sps.readDelay().toString()) }
+        var delay by rememberSaveable { mutableStateOf(sps.readDelay().toString()) }
         val delayValidation = {
             text: String -> try {
-                text.toInt() >= 0
+                text.toInt() in 0..60
             } catch (e: NumberFormatException) {
                 false
             }
         }
         CenterColumn(verticalArrangement = Arrangement.Center) {
             ScaleCoefficientInput(
-                textState = scaleCoefficientText,
+                value = scaleCoefficient,
+                onValueChange = { scaleCoefficient = it },
                 inputValidation = scaleCoefficientValidation
             )
             DelayInput(
-                textState = delayText,
+                value = delay,
+                onValueChange = { delay = it },
                 inputValidation = delayValidation
             )
         }
         CenterColumn(verticalArrangement = Arrangement.Bottom) {
             StartButton(
-                scaleCoefficientText = scaleCoefficientText,
-                delayText = delayText,
-                enabled = scaleCoefficientValidation(scaleCoefficientText.value) && delayValidation(delayText.value)
+                scaleCoefficient = scaleCoefficient,
+                delay = delay,
+                enabled = scaleCoefficientValidation(scaleCoefficient) && delayValidation(delay)
             )
         }
     }
 
     @Composable
     private fun ScaleCoefficientInput(
-        textState: MutableState<String>,
+        value: String,
+        onValueChange: (String) -> Unit,
         inputValidation: (String) -> Boolean
     ) {
-        val isError = !inputValidation(textState.value)
+        val isError = !inputValidation(value)
         var openDialog by remember { mutableStateOf(false) }
         OutlinedTextField(
-            value = textState.value,
-            onValueChange = {
-                textState.value = it
-            },
+            value = value,
+            onValueChange = onValueChange,
             label = { Text("Уровень чувствительности") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
@@ -132,80 +110,57 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier.padding(0.dp, 10.dp)
         )
         if (isError) {
-            Text(
-                text = "Целое число от $minScaleCoefficient до $maxScaleCoefficient",
-                color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption
-            )
+            Error(text = "Целое число от $minScaleCoefficient до $maxScaleCoefficient")
         }
         if (openDialog) {
-            AlertDialog(
-                onDismissRequest = { openDialog = false },
-                text = {
-                    Text(text = "Чем меньше значение, чем система будет более чувствительна. " +
-                            "Чувствительность изменяется пропорционально. Так, система со " +
-                            "значением 4 в 2 раза чувствительнее системы с " +
-                            "значением 8.\nРекомендуемое значение: 3.")
-                },
-                buttons = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Button(
-                            onClick = {
-                                openDialog = false
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.primary,
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text("OK")
-                        }
-                    }
-                }
+            Alert(text = "Чем меньше значение, тем система будет более чувствительна. " +
+                    "Чувствительность изменяется пропорционально. Так, система со " +
+                    "значением \"4\" в 2 раза чувствительнее чем со " +
+                    "значением \"8\".\nРекомендуемое значение: 3.",
+                onCloseDialog = { openDialog = false }
             )
         }
     }
 
     @Composable
     private fun DelayInput(
-        textState: MutableState<String>,
+        value: String,
+        onValueChange: (String) -> Unit,
         inputValidation: (String) -> Boolean
     ) {
+        val isError = !inputValidation(value)
         OutlinedTextField(
-            value = textState.value,
-            onValueChange = {
-                textState.value = it
-            },
+            value = value,
+            onValueChange = onValueChange,
             label = { Text("Задержка (в минутах)") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             ),
+            isError = isError,
             modifier = Modifier.padding(0.dp, 10.dp),
-            isError = !inputValidation(textState.value)
         )
+        if (isError) {
+            Error(text = "Допустимые значения: от 0 до 60")
+        }
     }
 
     @Composable
     private fun StartButton(
-        scaleCoefficientText: MutableState<String>,
-        delayText: MutableState<String>,
+        scaleCoefficient: String,
+        delay: String,
         enabled: Boolean
     ) {
         Button(
             shape = RoundedCornerShape(50),
             onClick = {
-                sps.saveScaleCoefficient(scaleCoefficientText.value.toInt())
-                Configs.scaleCoefficient = scaleCoefficientText.value.toInt()
-                sps.saveDelay(delayText.value.toInt())
-                if (delayText.value.toInt() == 0) {
-                    render { SensorValues() }
+                sps.saveScaleCoefficient(scaleCoefficient.toInt())
+                Configs.scaleCoefficient = scaleCoefficient.toInt()
+                sps.saveDelay(delay.toInt())
+                Configs.key = sps.readKey()
+                if (delay.toInt() == 0) {
+                    startSensorActivity()
                 } else {
-                    render { Timer(minutesValue = delayText.value.toInt()) }
+                    render { Timer(minutesValue = delay.toInt()) }
                 }
             },
             enabled = enabled
@@ -215,48 +170,43 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun CenterColumn(
-        verticalArrangement: Arrangement.Vertical,
-        composable: @Composable () -> Unit
+    private fun Alert(
+        text: String,
+        onCloseDialog: () -> Unit
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            verticalArrangement = verticalArrangement,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            composable()
-        }
-    }
-
-    @Composable
-    private fun SensorValues() {
-        Configs.key = sps.readKey()
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
-            for ((name, type) in sensorTypes) {
-                Sensor(name, type)
+        AlertDialog(
+            onDismissRequest = onCloseDialog,
+            text = {
+                Text(text = text)
+            },
+            buttons = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Button(
+                        onClick = onCloseDialog,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.primary,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("OK")
+                    }
+                }
             }
-        }
-        sensorFactory.registerAll()
+        )
     }
 
     @Composable
-    private fun Sensor(name: String, type: Int) {
-        val valueState = remember { mutableStateOf("") }
-        val colorState = remember { mutableStateOf(Color.Black) }
-        if (sensorFactory.createSensor(name, type, valueState, colorState)) {
-            Text(
-                text = "$name: ${valueState.value}",
-                fontSize = 24.sp,
-                lineHeight = 30.sp,
-                color = colorState.value
-            )
-        }
+    private fun Error(text: String) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.error,
+            style = MaterialTheme.typography.caption
+        )
     }
 
     @Composable
@@ -269,7 +219,7 @@ class MainActivity : ComponentActivity() {
                 fontSize = 64.sp
             )
         }
-        LaunchedEffect(0) {
+        LaunchedEffect(true) {
             while (minutes > 0 || seconds > 0) {
                 if (seconds > 0) {
                     seconds -= 1
@@ -279,20 +229,40 @@ class MainActivity : ComponentActivity() {
                 }
                 delay(1000)
             }
-            render { SensorValues() }
+            startSensorActivity()
         }
     }
 
-    private fun render(composable: @Composable () -> Unit) {
+    @Composable
+    private fun CenterColumn(
+        verticalArrangement: Arrangement.Vertical,
+        content: @Composable () -> Unit
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            content()
+        }
+    }
+
+    private fun render(content: @Composable () -> Unit) {
         setContent {
             HomeControllerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    composable()
+                    content()
                 }
             }
         }
+    }
+
+    private fun startSensorActivity() {
+        startActivity(Intent(this, SensorActivity::class.java))
     }
 }

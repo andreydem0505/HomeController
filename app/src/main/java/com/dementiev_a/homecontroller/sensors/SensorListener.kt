@@ -4,15 +4,14 @@ import androidx.compose.ui.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
-import androidx.compose.runtime.MutableState
 import com.dementiev_a.homecontroller.requests.Requests
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
 class SensorListener(
     private val name: String,
-    private var valueReference: MutableState<String>,
-    private var colorReference: MutableState<Color>
+    private val onValueChange: (String) -> Unit,
+    private val onColorChange: (Color) -> Unit
 ) : SensorEventListener {
     private var lastValues: FloatArray? = null
     private var framesProcessed: Int = 0
@@ -42,14 +41,16 @@ class SensorListener(
     }
 
     private fun updateView() {
-        valueReference.value = if (lastValues?.size == 1) {
-            String.format("%.2f", lastValues?.get(0))
-        } else {
-            String.format("(X=%.2f, Y=%.2f, Z=%.2f)",
-                lastValues?.get(0),
-                lastValues?.get(1),
-                lastValues?.get(2))
-        }
+        onValueChange(
+            if (lastValues?.size == 1) {
+                String.format("%.2f", lastValues?.get(0))
+            } else {
+                String.format("(X=%.2f, Y=%.2f, Z=%.2f)",
+                    lastValues?.get(0),
+                    lastValues?.get(1),
+                    lastValues?.get(2))
+            }
+        )
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
@@ -62,11 +63,11 @@ class SensorListener(
         }
         lastDanger = System.currentTimeMillis()
 
-        colorReference.value = Color.Red
+        onColorChange(Color.Red)
         thread {
             Requests.notify(Configs.key!!, name)
             Thread.sleep(5_000)
-            colorReference.value = Color.Black
+            onColorChange(Color.Black)
         }
     }
 

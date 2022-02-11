@@ -3,7 +3,6 @@ package com.dementiev_a.homecontroller.sensors
 import androidx.compose.ui.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import androidx.compose.runtime.MutableState
 
 class SensorFactory(private val sensorManager: SensorManager) {
     private var sensorsMap = mutableMapOf<Sensor, SensorListener>()
@@ -11,12 +10,12 @@ class SensorFactory(private val sensorManager: SensorManager) {
     fun createSensor(
         name: String,
         type: Int,
-        valueReference: MutableState<String>,
-        colorReference: MutableState<Color>
+        onValueChange: (String) -> Unit,
+        onColorChange: (Color) -> Unit
     ): Boolean {
         val sensor = sensorManager.getDefaultSensor(type)
         if (sensor != null) {
-            sensorsMap[sensor] = SensorListener(name, valueReference, colorReference)
+            sensorsMap[sensor] = SensorListener(name, onValueChange, onColorChange)
             return true
         }
         return false
