@@ -75,7 +75,6 @@ class SensorActivity : ComponentActivity() {
         var color by remember { mutableStateOf(Color.Black) }
         var toShow = true
         if (toCreate) {
-            println("-------------------INIT-----------------------")
             toShow = sensorFactory.createSensor(name, type, { value = it }, { color = it })
         }
         if (toShow) {

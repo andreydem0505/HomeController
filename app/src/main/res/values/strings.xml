@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HomeController</string>
+    <string name="app_name">Home Controller</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_sensor">SensorActivity</string>
 </resources>
