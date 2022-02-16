@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dementiev_a.homecontroller.sensors.Configs
@@ -163,7 +164,8 @@ class MainActivity : ComponentActivity() {
                     render { Timer(minutesValue = delay.toInt()) }
                 }
             },
-            enabled = enabled
+            enabled = enabled,
+            contentPadding = PaddingValues(20.dp, 15.dp)
         ) {
             Text(text = "Запустить")
         }
