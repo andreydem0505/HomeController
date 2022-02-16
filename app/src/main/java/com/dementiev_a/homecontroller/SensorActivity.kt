@@ -13,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dementiev_a.homecontroller.sensors.SensorFactory
@@ -78,12 +79,21 @@ class SensorActivity : ComponentActivity() {
             toShow = sensorFactory.createSensor(name, type, { value = it }, { color = it })
         }
         if (toShow) {
-            Text(
-                text = "$name: $value",
-                fontSize = 24.sp,
-                lineHeight = 30.sp,
-                color = color
-            )
+            Column(
+                modifier = Modifier.padding(0.dp, 10.dp)
+            ) {
+                Text(
+                    text = "$name:",
+                    fontSize = 24.sp,
+                    color = color
+                )
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = value,
+                    fontSize = 18.sp,
+                    color = color
+                )
+            }
         }
     }
 }
