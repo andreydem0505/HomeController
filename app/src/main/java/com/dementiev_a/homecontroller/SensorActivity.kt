@@ -11,12 +11,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.dementiev_a.homecontroller.sensors.SensorFactory
+import com.dementiev_a.homecontroller.sensors.SensorInfo
 import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
 
 class SensorActivity : ComponentActivity() {
@@ -33,7 +38,6 @@ class SensorActivity : ComponentActivity() {
         "Движение" to android.hardware.Sensor.TYPE_MOTION_DETECT,
         "Давление" to android.hardware.Sensor.TYPE_PRESSURE
     )
-    private var toCreate = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +48,7 @@ class SensorActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    SensorValues()
+                    SensorList()
                 }
             }
         }
@@ -56,44 +60,62 @@ class SensorActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun SensorValues() {
+    private fun SensorList() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
             for ((name, type) in sensorTypes) {
-                Sensor(name, type)
+                val viewModel = SensorViewModel()
+                if (sensorFactory.createSensor(SensorInfo(
+                        name = name,
+                        type = type,
+                        onValueChange = { viewModel.onValueChange(it) },
+                        onDangerChange = { viewModel.onDangerChange(it) }
+                    ))) {
+                    Sensor(name = name, viewModel = viewModel)
+                }
             }
         }
-        toCreate = false
         sensorFactory.registerAll()
     }
 
-    @Composable
-    private fun Sensor(name: String, type: Int) {
-        var value by remember { mutableStateOf("") }
-        var color by remember { mutableStateOf(Color.Black) }
-        var toShow = true
-        if (toCreate) {
-            toShow = sensorFactory.createSensor(name, type, { value = it }, { color = it })
+    class SensorViewModel : ViewModel() {
+        private val _value = MutableLiveData("")
+        val valueData: LiveData<String> = _value
+        private val _danger = MutableLiveData(false)
+        val dangerData: LiveData<Boolean> = _danger
+
+        fun onValueChange(value: String) {
+            _value.postValue(value)
         }
-        if (toShow) {
-            Column(
-                modifier = Modifier.padding(0.dp, 10.dp)
-            ) {
-                Text(
-                    text = "$name:",
-                    fontSize = 24.sp,
-                    color = color
-                )
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = value,
-                    fontSize = 18.sp,
-                    color = color
-                )
-            }
+
+        fun onDangerChange(danger: Boolean) {
+            _danger.postValue(danger)
         }
     }
+
+    @Composable
+    private fun Sensor(name: String, viewModel: SensorViewModel) {
+        val value by viewModel.valueData.observeAsState("")
+        val danger by viewModel.dangerData.observeAsState(false)
+        Column(
+            modifier = Modifier.padding(0.dp, 10.dp)
+        ) {
+            Text(
+                text = "$name:",
+                fontSize = 24.sp,
+                color = getColor(danger)
+            )
+            Text(
+                textAlign = TextAlign.Center,
+                text = value,
+                fontSize = 18.sp,
+                color = getColor(danger)
+            )
+        }
+    }
+
+    private fun getColor(danger: Boolean) = if (danger) Color.Red else Color.Black
 }

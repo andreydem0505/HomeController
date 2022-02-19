@@ -1,21 +1,15 @@
 package com.dementiev_a.homecontroller.sensors
 
-import androidx.compose.ui.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorManager
 
 class SensorFactory(private val sensorManager: SensorManager) {
     private var sensorsMap = mutableMapOf<Sensor, SensorListener>()
 
-    fun createSensor(
-        name: String,
-        type: Int,
-        onValueChange: (String) -> Unit,
-        onColorChange: (Color) -> Unit
-    ): Boolean {
-        val sensor = sensorManager.getDefaultSensor(type)
+    fun createSensor(sensorInfo: SensorInfo): Boolean {
+        val sensor = sensorManager.getDefaultSensor(sensorInfo.type)
         if (sensor != null) {
-            sensorsMap[sensor] = SensorListener(name, onValueChange, onColorChange)
+            sensorsMap[sensor] = SensorListener(sensorInfo)
             return true
         }
         return false

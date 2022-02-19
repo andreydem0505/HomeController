@@ -1,6 +1,5 @@
 package com.dementiev_a.homecontroller.sensors
 
-import androidx.compose.ui.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -8,11 +7,7 @@ import com.dementiev_a.homecontroller.requests.Requests
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
-class SensorListener(
-    private val name: String,
-    private val onValueChange: (String) -> Unit,
-    private val onColorChange: (Color) -> Unit
-) : SensorEventListener {
+class SensorListener(private val sensorInfo: SensorInfo) : SensorEventListener {
     private var lastValues: FloatArray? = null
     private var framesProcessed: Int = 0
     private var ultimateDifference: Float = .0F
@@ -41,7 +36,7 @@ class SensorListener(
     }
 
     private fun updateView() {
-        onValueChange(
+        sensorInfo.onValueChange(
             if (lastValues?.size == 1) {
                 String.format("%.2f", lastValues?.get(0))
             } else {
@@ -63,11 +58,11 @@ class SensorListener(
         }
         lastDanger = System.currentTimeMillis()
 
-        onColorChange(Color.Red)
+        sensorInfo.onDangerChange(true)
         thread {
-            Requests.notify(Configs.key!!, name)
+            Requests.notify(Configs.key!!, sensorInfo.name)
             Thread.sleep(5_000)
-            onColorChange(Color.Black)
+            sensorInfo.onDangerChange(false)
         }
     }
 
