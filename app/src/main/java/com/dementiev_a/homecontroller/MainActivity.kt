@@ -107,6 +107,7 @@ class MainActivity : ComponentActivity() {
                     Icon(Icons.Filled.Info, "about", tint = Color.Gray)
                 }
             },
+            singleLine = true,
             modifier = Modifier.padding(0.dp, 10.dp)
         )
         if (isError) {
@@ -137,6 +138,7 @@ class MainActivity : ComponentActivity() {
                 keyboardType = KeyboardType.Number
             ),
             isError = isError,
+            singleLine = true,
             modifier = Modifier.padding(0.dp, 10.dp),
         )
         if (isError) {
