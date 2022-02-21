@@ -48,5 +48,5 @@
 4. Открывается экран, показывающий текущие показания датчиков, имеющиеся на устройстве и обрабатываемые приложением. Система начинает анализ окружающей среды. Если какой-то датчик показывает сильные изменения, его название и показания становятся красными на 5 секунд, а пользователю отправляется сообщение о тревоге в Telegram боте. Пользователю не приходят сообщения о тревоге с одного датчика чаще, чем раз в 10 минут. Вернувшись к устройству, пользователь может закрыть приложение или закрыть текущий экран (в этом случае смотрите шаг 2).
 
 <p align="center">
-<img src="https://downloader.disk.yandex.ru/preview/be544b272c5365be9a92226b70a41261fcca676084a8ff8dd8105f8ab906f35b/6213f0c1/71uJYeeJ2g2ZJtco5473qkVH1kxG1QR3eVYcgM17hxl66f6QhYvRJ70iP1Ktsw2yG4ECVAkWkWes1SkH3Tv8tw%3D%3D?uid=0&filename=4.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
+<img src="https://downloader.disk.yandex.ru/preview/a11708f842976f56a8c252b88c7b59081be1eba8e5216e27e245cca189eff7dd/6213f675/xiAggbOVJigWaBPHw1iX_cV-eQq64OeKmo213liKFT1zydx8rYn6LDxQl1bNBUxkLkyp5NoILzy4rFCSs-Inbg%3D%3D?uid=0&filename=4.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
 </p>
