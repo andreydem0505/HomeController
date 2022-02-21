@@ -5,6 +5,8 @@
 Ссылка на apk файл: https://disk.yandex.ru/d/0NcmVBKt6Dta3A
 
 Системные требования: Android версии 8 и выше.
+
+Для запуска локально рекомендуется использовать Android Studio.
 <hr>
 
 В ходе разработки использовались современные и перспективные технологии: язык программирования Kotlin, фреймворк Spring, библеотеки Jetpack Compose и Retrofit, облачная NoSQL база данных Cloud Firestore, система сборки Gradle, система управления версиями Git, стиль графического дизайна Material Design, API Telegram.
