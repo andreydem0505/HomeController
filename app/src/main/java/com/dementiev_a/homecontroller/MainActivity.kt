@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,29 +92,21 @@ class MainActivity : ComponentActivity() {
         onValueChange: (String) -> Unit,
         inputValidation: (String) -> Boolean
     ) {
-        val isError = !inputValidation(value)
         var openDialog by remember { mutableStateOf(false) }
-        OutlinedTextField(
+        OutlinedInput(
             value = value,
+            isError = !inputValidation(value),
             onValueChange = onValueChange,
-            label = { Text("Уровень чувствительности") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            isError = isError,
+            labelText = "Уровень чувствительности",
+            errorText = "Целое число от $minScaleCoefficient до $maxScaleCoefficient",
             trailingIcon = {
                 IconButton(onClick = {
                     openDialog = true
                 }) {
                     Icon(Icons.Filled.Info, "about", tint = Color.Gray)
                 }
-            },
-            singleLine = true,
-            modifier = Modifier.padding(0.dp, 10.dp)
+            }
         )
-        if (isError) {
-            Error(text = "Целое число от $minScaleCoefficient до $maxScaleCoefficient")
-        }
         if (openDialog) {
             Alert(text = "Чем меньше значение, тем система будет более чувствительна. " +
                     "Чувствительность изменяется пропорционально. Так, система со " +
@@ -129,20 +123,41 @@ class MainActivity : ComponentActivity() {
         onValueChange: (String) -> Unit,
         inputValidation: (String) -> Boolean
     ) {
-        val isError = !inputValidation(value)
+        OutlinedInput(
+            value = value,
+            isError = !inputValidation(value),
+            onValueChange = onValueChange,
+            labelText = "Задержка (в минутах)",
+            errorText = "Допустимые значения: от 0 до 60",
+            trailingIcon = {}
+        )
+    }
+
+    @Composable
+    private fun OutlinedInput(
+        value: String,
+        isError: Boolean,
+        onValueChange: (String) -> Unit,
+        labelText: String,
+        errorText: String,
+        trailingIcon: @Composable () -> Unit
+    ) {
+        val focusManager = LocalFocusManager.current
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text("Задержка (в минутах)") },
+            label = { Text(labelText) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             ),
             isError = isError,
             singleLine = true,
-            modifier = Modifier.padding(0.dp, 10.dp),
+            trailingIcon = trailingIcon,
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            modifier = Modifier.padding(0.dp, 10.dp)
         )
         if (isError) {
-            Error(text = "Допустимые значения: от 0 до 60")
+            Error(text = errorText)
         }
     }
 
@@ -204,15 +219,6 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun Error(text: String) {
-        Text(
-            text = text,
-            color = MaterialTheme.colors.error,
-            style = MaterialTheme.typography.caption
-        )
-    }
-
-    @Composable
     private fun Timer(minutesValue: Int) {
         var minutes by remember { mutableStateOf(minutesValue) }
         var seconds by remember { mutableStateOf(0) }
@@ -234,6 +240,15 @@ class MainActivity : ComponentActivity() {
             }
             startSensorActivity()
         }
+    }
+
+    @Composable
+    private fun Error(text: String) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.error,
+            style = MaterialTheme.typography.caption
+        )
     }
 
     @Composable

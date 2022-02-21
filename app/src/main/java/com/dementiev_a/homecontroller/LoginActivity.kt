@@ -1,6 +1,7 @@
 package com.dementiev_a.homecontroller
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -103,9 +104,12 @@ class LoginActivity : ComponentActivity() {
                                 sps.saveKey(text)
                                 finish()
                             }
+                        } else {
+                            Toast.makeText(applicationContext, "Серверная ошибка", Toast.LENGTH_SHORT).show()
                         }
                     }
-                }},
+                }
+            },
             label = { Text("Ключ") }
         )
     }
