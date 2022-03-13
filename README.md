@@ -32,23 +32,23 @@
 1. Если пользователь авторизован, смотрите следующий шаг. Иначе открывается экран с инструкцией по регистрации и ссылкой на Telegram бота. Пользователь переходит в бота, запускает его и получает индивидуальный уникальный ключ. Пользователь переходит обратно в приложение и вставляет ключ в соответствующее поле. Ключ проверяется и, в случае успеха, записывается в локальное хранилище приложения, и экран закрывается. С этого момента пользователь считается авторизованным.
 
 <p align="center">
-<img src="https://downloader.disk.yandex.ru/preview/bc53e2cdc74fbf8ca99a58608d28ea06649fb3314c55b47d0a80e5a671edcdc6/6213f002/sQ1VoGuyR2z8U5Z6S4tHS0VH1kxG1QR3eVYcgM17hxnMGtEQX6oDfI515LkrO5j51D1KfCKoKQki0Bopu8YtTA%3D%3D?uid=0&filename=1.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
+<img src="https://downloader.disk.yandex.ru/preview/ac23e101900aae1fd252a665fdc7f436fa0aeda2cda10cbd39cb8bacec608d80/622dddc3/sQ1VoGuyR2z8U5Z6S4tHS0VH1kxG1QR3eVYcgM17hxnMGtEQX6oDfI515LkrO5j51D1KfCKoKQki0Bopu8YtTA%3D%3D?uid=0&filename=1.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
 </p>
 
 2. Пользователь изменяет настройки приложения, такие как коэффициент чувствительности и время задержи перед началом анализа окружающей среды. При первом открытии этого экрана в поля подставляются рекомендуемые значения, при последующих - значения, которые пользователь ввёл в прошлый раз (записываются в локальное хранилище). Пользователь может узнать больше о конкретном поле, нажав на соответствующую иконку. В этом случае откроется диалоговое окно с информацией и кнопкой "ОК" для закрытия этого окна. При неверном формате ввода граница соответствующего поля становится красной, появляется надпись об ошибке, кнопка "Запустить" блокируется. После настроек, пользователь нажимает кнопку "Запустить".
 
 <p align="center">
-<img src="https://downloader.disk.yandex.ru/preview/1e2adb5c209a88f5ac8b61a3a81b607b8744d8f3ee21785cf3e21ce4d23ba053/6213f04c/aRyy9vU93qDauN77sL2R2UVH1kxG1QR3eVYcgM17hxmDzbxJtmy64C7XXdzx1Vkp3pRoqK7ocuWLP-vQFJPaag%3D%3D?uid=0&filename=2.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
+<img src="https://downloader.disk.yandex.ru/preview/68e4a285e7b9cd628e2817179296c987c90e3d66c0c2876b77741014c7832a16/622dde0b/aRyy9vU93qDauN77sL2R2UVH1kxG1QR3eVYcgM17hxmDzbxJtmy64C7XXdzx1Vkp3pRoqK7ocuWLP-vQFJPaag%3D%3D?uid=0&filename=2.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
 </p>
 
 3. Если пользователь оставил значение задержки равное 0, смотрите следующий шаг. Иначе на экране появляется запущенный таймер, ведущий отсчёт с выставленного значения задержки. Пользователь в это время устанавливает устройство в выделенное для него место, оставляет окружающие условия такими, какими они должны быть во время работы системы (например, уходит из помещения, выключив за собой свет, закрыв дверь и т. д.).
 
 <p align="center">
-<img src="https://downloader.disk.yandex.ru/preview/4418526f27c2d048af4cc155b4f77e62f19df284cfbd2f476dd4e082628bc2db/6213f084/pOzkGPDITrzUVLsaIjAo7EVH1kxG1QR3eVYcgM17hxmy_I2DrD0_RO7o9Od6oXsoo-Gf00ipWL5HRFMcl6Xndg%3D%3D?uid=0&filename=3.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
+<img src="https://downloader.disk.yandex.ru/preview/55bd3757cc3503ed93776c9eef6fe47e9811c874fae631954661483e739754bc/622dde2a/pOzkGPDITrzUVLsaIjAo7EVH1kxG1QR3eVYcgM17hxmy_I2DrD0_RO7o9Od6oXsoo-Gf00ipWL5HRFMcl6Xndg%3D%3D?uid=0&filename=3.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
 </p>
 
 4. Открывается экран, показывающий текущие показания датчиков, имеющиеся на устройстве и обрабатываемые приложением. Система начинает анализ окружающей среды. Если какой-то датчик показывает сильные изменения, его название и показания становятся красными на 5 секунд, а пользователю отправляется сообщение о тревоге в Telegram боте. Пользователю не приходят сообщения о тревоге с одного датчика чаще, чем раз в 10 минут. Вернувшись к устройству, пользователь может закрыть приложение или закрыть текущий экран (в этом случае смотрите шаг 2).
 
 <p align="center">
-<img src="https://downloader.disk.yandex.ru/preview/a11708f842976f56a8c252b88c7b59081be1eba8e5216e27e245cca189eff7dd/6213f675/xiAggbOVJigWaBPHw1iX_cV-eQq64OeKmo213liKFT1zydx8rYn6LDxQl1bNBUxkLkyp5NoILzy4rFCSs-Inbg%3D%3D?uid=0&filename=4.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
+<img src="https://downloader.disk.yandex.ru/preview/3e05d51e5889eb6e9da594e8bc581c10e318c300c7d11a4954d6cefcaadb368d/622dde46/xiAggbOVJigWaBPHw1iX_cV-eQq64OeKmo213liKFT1zydx8rYn6LDxQl1bNBUxkLkyp5NoILzy4rFCSs-Inbg%3D%3D?uid=0&filename=4.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=500x500" alt="скриншот"/>
 </p>
