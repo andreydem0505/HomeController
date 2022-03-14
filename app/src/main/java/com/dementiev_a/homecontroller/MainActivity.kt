@@ -50,39 +50,45 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun Settings() {
         var scaleCoefficient by rememberSaveable { mutableStateOf(sps.readScaleCoefficient().toString()) }
-        val scaleCoefficientValidation = {
-            text: String -> try {
-                text.toInt() in minScaleCoefficient..maxScaleCoefficient
-            } catch (e: NumberFormatException) {
-                false
-            }
-        }
-        var delay by rememberSaveable { mutableStateOf(sps.readDelay().toString()) }
-        val delayValidation = {
-            text: String -> try {
-                text.toInt() in 0..60
-            } catch (e: NumberFormatException) {
-                false
-            }
-        }
+        var startDelay by rememberSaveable { mutableStateOf(sps.readStartDelay().toString()) }
+        var dangerDelay by rememberSaveable { mutableStateOf(sps.readDangerDelay().toString()) }
+        val scaleCoefficientValidation = checkIntInRange(minScaleCoefficient..maxScaleCoefficient)
+        val startDelayValidation = checkIntInRange(0..60)
+        val dangerDelayValidation = checkIntInRange(1..60)
         CenterColumn(verticalArrangement = Arrangement.Center) {
             ScaleCoefficientInput(
                 value = scaleCoefficient,
                 onValueChange = { scaleCoefficient = it },
                 inputValidation = scaleCoefficientValidation
             )
-            DelayInput(
-                value = delay,
-                onValueChange = { delay = it },
-                inputValidation = delayValidation
+            StartDelayInput(
+                value = startDelay,
+                onValueChange = { startDelay = it },
+                inputValidation = startDelayValidation
+            )
+            DangerDelayInput(
+                value = dangerDelay,
+                onValueChange = { dangerDelay = it },
+                inputValidation = dangerDelayValidation
             )
         }
         CenterColumn(verticalArrangement = Arrangement.Bottom) {
             StartButton(
                 scaleCoefficient = scaleCoefficient,
-                delay = delay,
-                enabled = scaleCoefficientValidation(scaleCoefficient) && delayValidation(delay)
+                startDelay = startDelay,
+                dangerDelay = dangerDelay,
+                enabled = scaleCoefficientValidation(scaleCoefficient)
+                        && startDelayValidation(startDelay)
+                        && dangerDelayValidation(dangerDelay)
             )
+        }
+    }
+
+    private fun checkIntInRange(range: IntRange) = {
+        text: String -> try {
+            text.toInt() in range
+        } catch (e: NumberFormatException) {
+            false
         }
     }
 
@@ -118,7 +124,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun DelayInput(
+    private fun StartDelayInput(
         value: String,
         onValueChange: (String) -> Unit,
         inputValidation: (String) -> Boolean
@@ -127,10 +133,39 @@ class MainActivity : ComponentActivity() {
             value = value,
             isError = !inputValidation(value),
             onValueChange = onValueChange,
-            labelText = "Задержка (в минутах)",
+            labelText = "Начальная задержка (в мин.)",
             errorText = "Допустимые значения: от 0 до 60",
             trailingIcon = {}
         )
+    }
+
+    @Composable
+    private fun DangerDelayInput(
+        value: String,
+        onValueChange: (String) -> Unit,
+        inputValidation: (String) -> Boolean
+    ) {
+        var openDialog by remember { mutableStateOf(false) }
+        OutlinedInput(
+            value = value,
+            isError = !inputValidation(value),
+            onValueChange = onValueChange,
+            labelText = "Задержка между сигналами (в мин.)",
+            errorText = "Допустимые значения: от 1 до 60",
+            trailingIcon = {
+                IconButton(onClick = {
+                    openDialog = true
+                }) {
+                    Icon(Icons.Filled.Info, "about", tint = Color.Gray)
+                }
+            }
+        )
+        if (openDialog) {
+            Alert(
+                text = "Минимальная задержка между сигналами о тревоги с одного датчика.",
+                onCloseDialog = { openDialog = false }
+            )
+        }
     }
 
     @Composable
@@ -164,20 +199,23 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun StartButton(
         scaleCoefficient: String,
-        delay: String,
+        startDelay: String,
+        dangerDelay: String,
         enabled: Boolean
     ) {
         Button(
             shape = RoundedCornerShape(50),
             onClick = {
                 sps.saveScaleCoefficient(scaleCoefficient.toInt())
+                sps.saveStartDelay(startDelay.toInt())
+                sps.saveDangerDelay(dangerDelay.toInt())
                 Configs.scaleCoefficient = scaleCoefficient.toInt()
-                sps.saveDelay(delay.toInt())
                 Configs.key = sps.readKey()
-                if (delay.toInt() == 0) {
+                Configs.dangerDelay = dangerDelay.toInt() * 60_000
+                if (startDelay.toInt() == 0) {
                     startSensorActivity()
                 } else {
-                    render { Timer(minutesValue = delay.toInt()) }
+                    render { Timer(minutesValue = startDelay.toInt()) }
                 }
             },
             enabled = enabled,

@@ -7,7 +7,8 @@ class SharedPreferencesService(context: Context) {
     companion object {
         const val USER_KEY = "key"
         const val SCALE_COEFFICIENT = "scale_coefficient"
-        const val DELAY = "delay"
+        const val START_DELAY = "start_delay"
+        const val DANGER_DELAY = "danger_delay"
     }
 
     private var sp: SharedPreferences = context.getSharedPreferences(
@@ -37,14 +38,27 @@ class SharedPreferencesService(context: Context) {
         }
     }
 
-    fun saveDelay(delay: Int) {
-        putInt(DELAY, delay)
+    fun saveStartDelay(delay: Int) {
+        putInt(START_DELAY, delay)
     }
 
-    fun readDelay(): Int {
-        val result = getInt(DELAY)
+    fun readStartDelay(): Int {
+        val result = getInt(START_DELAY)
         return if (result == -1) {
             0
+        } else {
+            result
+        }
+    }
+
+    fun saveDangerDelay(delay: Int) {
+        putInt(DANGER_DELAY, delay)
+    }
+
+    fun readDangerDelay(): Int {
+        val result = getInt(DANGER_DELAY)
+        return if (result == -1) {
+            10
         } else {
             result
         }
