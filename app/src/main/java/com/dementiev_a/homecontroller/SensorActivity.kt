@@ -13,8 +13,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -109,7 +107,6 @@ class SensorActivity : ComponentActivity() {
                 color = getColor(danger)
             )
             Text(
-                textAlign = TextAlign.Center,
                 text = value,
                 fontSize = 18.sp,
                 color = getColor(danger)
@@ -117,5 +114,6 @@ class SensorActivity : ComponentActivity() {
         }
     }
 
-    private fun getColor(danger: Boolean) = if (danger) Color.Red else Color.Black
+    @Composable
+    private fun getColor(danger: Boolean) = if (danger) MaterialTheme.colors.error else MaterialTheme.colors.onSurface
 }

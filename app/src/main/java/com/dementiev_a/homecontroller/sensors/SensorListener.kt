@@ -52,7 +52,7 @@ class SensorListener(private val sensorInfo: SensorInfo) : SensorEventListener {
 
     private fun danger() {
         if (lastDanger != null) {
-            if (System.currentTimeMillis() - lastDanger!! < Configs.dangerDelay!!) {
+            if (System.currentTimeMillis() - lastDanger!! < Configs.dangerInterval!!) {
                 return
             }
         }

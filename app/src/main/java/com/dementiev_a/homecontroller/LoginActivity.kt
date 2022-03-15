@@ -23,7 +23,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.dementiev_a.homecontroller.requests.Requests
 import com.dementiev_a.homecontroller.shared_preferences.SharedPreferencesService
 import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
@@ -73,7 +72,7 @@ class LoginActivity : ComponentActivity() {
                         style = SpanStyle(
                             color = Color.Blue,
                             textDecoration = TextDecoration.Underline,
-                            fontSize = 16.sp
+                            fontSize = MaterialTheme.typography.body1.fontSize
                         )
                     ) {
                         append("Перейдите в бота")

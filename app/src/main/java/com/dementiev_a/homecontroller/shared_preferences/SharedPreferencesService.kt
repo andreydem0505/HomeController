@@ -8,7 +8,7 @@ class SharedPreferencesService(context: Context) {
         const val USER_KEY = "key"
         const val SCALE_COEFFICIENT = "scale_coefficient"
         const val START_DELAY = "start_delay"
-        const val DANGER_DELAY = "danger_delay"
+        const val DANGER_INTERVAL = "danger_interval"
     }
 
     private var sp: SharedPreferences = context.getSharedPreferences(
@@ -51,12 +51,12 @@ class SharedPreferencesService(context: Context) {
         }
     }
 
-    fun saveDangerDelay(delay: Int) {
-        putInt(DANGER_DELAY, delay)
+    fun saveDangerInterval(delay: Int) {
+        putInt(DANGER_INTERVAL, delay)
     }
 
-    fun readDangerDelay(): Int {
-        val result = getInt(DANGER_DELAY)
+    fun readDangerInterval(): Int {
+        val result = getInt(DANGER_INTERVAL)
         return if (result == -1) {
             10
         } else {

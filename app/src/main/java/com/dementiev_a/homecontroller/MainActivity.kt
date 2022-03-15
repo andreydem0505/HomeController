@@ -51,10 +51,10 @@ class MainActivity : ComponentActivity() {
     private fun Settings() {
         var scaleCoefficient by rememberSaveable { mutableStateOf(sps.readScaleCoefficient().toString()) }
         var startDelay by rememberSaveable { mutableStateOf(sps.readStartDelay().toString()) }
-        var dangerDelay by rememberSaveable { mutableStateOf(sps.readDangerDelay().toString()) }
+        var dangerInterval by rememberSaveable { mutableStateOf(sps.readDangerInterval().toString()) }
         val scaleCoefficientValidation = checkIntInRange(minScaleCoefficient..maxScaleCoefficient)
         val startDelayValidation = checkIntInRange(0..60)
-        val dangerDelayValidation = checkIntInRange(1..60)
+        val dangerIntervalValidation = checkIntInRange(1..60)
         CenterColumn(verticalArrangement = Arrangement.Center) {
             ScaleCoefficientInput(
                 value = scaleCoefficient,
@@ -66,20 +66,20 @@ class MainActivity : ComponentActivity() {
                 onValueChange = { startDelay = it },
                 inputValidation = startDelayValidation
             )
-            DangerDelayInput(
-                value = dangerDelay,
-                onValueChange = { dangerDelay = it },
-                inputValidation = dangerDelayValidation
+            DangerIntervalInput(
+                value = dangerInterval,
+                onValueChange = { dangerInterval = it },
+                inputValidation = dangerIntervalValidation
             )
         }
         CenterColumn(verticalArrangement = Arrangement.Bottom) {
             StartButton(
                 scaleCoefficient = scaleCoefficient,
                 startDelay = startDelay,
-                dangerDelay = dangerDelay,
+                dangerInterval = dangerInterval,
                 enabled = scaleCoefficientValidation(scaleCoefficient)
                         && startDelayValidation(startDelay)
-                        && dangerDelayValidation(dangerDelay)
+                        && dangerIntervalValidation(dangerInterval)
             )
         }
     }
@@ -105,14 +105,9 @@ class MainActivity : ComponentActivity() {
             onValueChange = onValueChange,
             labelText = "Уровень чувствительности",
             errorText = "Целое число от $minScaleCoefficient до $maxScaleCoefficient",
-            trailingIcon = {
-                IconButton(onClick = {
-                    openDialog = true
-                }) {
-                    Icon(Icons.Filled.Info, "about", tint = Color.Gray)
-                }
-            }
-        )
+        ) {
+            AboutIconButton { openDialog = true }
+        }
         if (openDialog) {
             Alert(text = "Чем меньше значение, тем система будет более чувствительна. " +
                     "Чувствительность изменяется пропорционально. Так, система со " +
@@ -140,7 +135,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun DangerDelayInput(
+    private fun DangerIntervalInput(
         value: String,
         onValueChange: (String) -> Unit,
         inputValidation: (String) -> Boolean
@@ -150,21 +145,25 @@ class MainActivity : ComponentActivity() {
             value = value,
             isError = !inputValidation(value),
             onValueChange = onValueChange,
-            labelText = "Задержка между сигналами (в мин.)",
-            errorText = "Допустимые значения: от 1 до 60",
-            trailingIcon = {
-                IconButton(onClick = {
-                    openDialog = true
-                }) {
-                    Icon(Icons.Filled.Info, "about", tint = Color.Gray)
-                }
-            }
-        )
+            labelText = "Промежуток между сигналами (в мин.)",
+            errorText = "Допустимые значения: от 1 до 60"
+        ) {
+            AboutIconButton { openDialog = true }
+        }
         if (openDialog) {
             Alert(
-                text = "Минимальная задержка между сигналами о тревоги с одного датчика.",
+                text = "Минимальный временной промежуток, который должен пройти между сигналами о " +
+                        "тревоги с одного датчика. Позволяет избежать получения нескольких сигналов " +
+                        "с одного датчика за короткое время.",
                 onCloseDialog = { openDialog = false }
             )
+        }
+    }
+
+    @Composable
+    private fun AboutIconButton(onClick: () -> Unit) {
+        IconButton(onClick = onClick) {
+            Icon(Icons.Filled.Info, "about", tint = Color.Gray)
         }
     }
 
@@ -200,7 +199,7 @@ class MainActivity : ComponentActivity() {
     private fun StartButton(
         scaleCoefficient: String,
         startDelay: String,
-        dangerDelay: String,
+        dangerInterval: String,
         enabled: Boolean
     ) {
         Button(
@@ -208,10 +207,10 @@ class MainActivity : ComponentActivity() {
             onClick = {
                 sps.saveScaleCoefficient(scaleCoefficient.toInt())
                 sps.saveStartDelay(startDelay.toInt())
-                sps.saveDangerDelay(dangerDelay.toInt())
+                sps.saveDangerInterval(dangerInterval.toInt())
                 Configs.scaleCoefficient = scaleCoefficient.toInt()
                 Configs.key = sps.readKey()
-                Configs.dangerDelay = dangerDelay.toInt() * 60_000
+                Configs.dangerInterval = dangerInterval.toInt() * 60_000
                 if (startDelay.toInt() == 0) {
                     startSensorActivity()
                 } else {
@@ -246,7 +245,7 @@ class MainActivity : ComponentActivity() {
                         onClick = onCloseDialog,
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.primary,
-                            contentColor = Color.White
+                            contentColor = MaterialTheme.colors.surface
                         )
                     ) {
                         Text("OK")
