@@ -140,7 +140,7 @@ class MainActivity : ComponentActivity() {
             value = value,
             isError = !inputValidation(value),
             onValueChange = onValueChange,
-            labelText = stringResource(R.string.main_activity_danger_interval_input_alert),
+            labelText = stringResource(R.string.main_activity_delay_interval_label),
             errorText = stringResource(R.string.main_activity_error_not_in_range, 1, 60)
         ) {
             AboutIconButton { openDialog = true }

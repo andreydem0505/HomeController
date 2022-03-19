@@ -1,5 +1,6 @@
 package com.dementiev_a.homecontroller
 
+import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,21 +25,22 @@ import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
 
 class SensorActivity : ComponentActivity() {
     private lateinit var sensorFactory: SensorFactory
-    private val sensorTypes = mapOf(
-        getString(R.string.sensor_light) to android.hardware.Sensor.TYPE_LIGHT,
-        getString(R.string.sensor_gyroscope) to android.hardware.Sensor.TYPE_GYROSCOPE,
-        getString(R.string.sensor_humidity) to android.hardware.Sensor.TYPE_RELATIVE_HUMIDITY,
-        getString(R.string.sensor_accelerometer) to android.hardware.Sensor.TYPE_ACCELEROMETER,
-        getString(R.string.sensor_gravity) to android.hardware.Sensor.TYPE_GRAVITY,
-        getString(R.string.sensor_magnetic_field) to android.hardware.Sensor.TYPE_MAGNETIC_FIELD,
-        getString(R.string.sensor_proximity) to android.hardware.Sensor.TYPE_PROXIMITY,
-        getString(R.string.sensor_temperature) to android.hardware.Sensor.TYPE_AMBIENT_TEMPERATURE,
-        getString(R.string.sensor_motion) to android.hardware.Sensor.TYPE_MOTION_DETECT,
-        getString(R.string.sensor_pressure) to android.hardware.Sensor.TYPE_PRESSURE
-    )
+    private lateinit var sensorTypes: Map<String, Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sensorTypes = mapOf(
+            getString(R.string.sensor_light) to Sensor.TYPE_LIGHT,
+            getString(R.string.sensor_gyroscope) to Sensor.TYPE_GYROSCOPE,
+            getString(R.string.sensor_humidity) to Sensor.TYPE_RELATIVE_HUMIDITY,
+            getString(R.string.sensor_accelerometer) to Sensor.TYPE_ACCELEROMETER,
+            getString(R.string.sensor_gravity) to Sensor.TYPE_GRAVITY,
+            getString(R.string.sensor_magnetic_field) to Sensor.TYPE_MAGNETIC_FIELD,
+            getString(R.string.sensor_proximity) to Sensor.TYPE_PROXIMITY,
+            getString(R.string.sensor_temperature) to Sensor.TYPE_AMBIENT_TEMPERATURE,
+            getString(R.string.sensor_motion) to Sensor.TYPE_MOTION_DETECT,
+            getString(R.string.sensor_pressure) to Sensor.TYPE_PRESSURE
+        )
         sensorFactory = SensorFactory(applicationContext.getSystemService(SENSOR_SERVICE) as SensorManager)
         setContent {
             HomeControllerTheme {
