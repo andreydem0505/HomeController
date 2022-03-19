@@ -1,5 +1,34 @@
 <resources>
     <string name="app_name">Home Controller</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_sensor">SensorActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
+    <string name="title_activity_sensor" translatable="false">SensorActivity</string>
+
+    <string name="login_activity.register_using_telegram">Register using Telegram:</string>
+    <string name="login_activity.go_to_bot">Go to the bot</string>
+    <string name="login_activity.press_start_and_get_key">Press start and get key</string>
+    <string name="login_activity.insert_key_below">Insert key in the field below</string>
+    <string name="login_activity.key">Key</string>
+
+    <string name="main_activity.sensitivity_level">Sensitivity level</string>
+    <string name="main_activity.integer_from_to">Integer from %1$d to %2$d</string>
+    <string name="main_activity.scale_coefficient_input_alert">The lower the value, the more sensitive the system will be. The sensitivity changes proportionally. So, the system with the value "4" 2 times more sensitive than one with value "8".\nRecommended value is %1$d.</string>
+    <string name="main_activity.danger_interval_input_alert">Minimal period that is going to pass between anxiety signals from one sensor. It allows to avoid getting several signals during short period.</string>
+    <string name="main_activity.start_delay_label">Start delay (min.)</string>
+    <string name="main_activity.delay_interval_label">Interval between the signals (min.)</string>
+    <string name="main_activity.error_not_in_range">Allowed values are from %1$d to %2$d</string>
+    <string name="main_activity.start">Start</string>
+
+    <string name="server_error">Server error</string>
+    <string name="ok" translatable="false">OK</string>
+
+    <string name="sensor.light">Light</string>
+    <string name="sensor.gyroscope">Gyroscope</string>
+    <string name="sensor.humidity">Humidity</string>
+    <string name="sensor.accelerometer">Accelerometer</string>
+    <string name="sensor.gravity">Gravity</string>
+    <string name="sensor.magnetic_field">Magnetic field</string>
+    <string name="sensor.proximity">Proximity</string>
+    <string name="sensor.temperature">Temperature</string>
+    <string name="sensor.motion">Motion</string>
+    <string name="sensor.pressure">Pressure</string>
 </resources>

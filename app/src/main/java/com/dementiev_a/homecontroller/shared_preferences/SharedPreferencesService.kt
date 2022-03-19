@@ -2,6 +2,7 @@ package com.dementiev_a.homecontroller.shared_preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.dementiev_a.homecontroller.sensors.Configs
 
 class SharedPreferencesService(context: Context) {
     companion object {
@@ -32,7 +33,7 @@ class SharedPreferencesService(context: Context) {
     fun readScaleCoefficient(): Int {
         val result = getInt(SCALE_COEFFICIENT)
         return if (result == -1) {
-            3
+            Configs.RECOMMENDED_SCALE_COEFFICIENT
         } else {
             result
         }
@@ -45,7 +46,7 @@ class SharedPreferencesService(context: Context) {
     fun readStartDelay(): Int {
         val result = getInt(START_DELAY)
         return if (result == -1) {
-            0
+            Configs.RECOMMENDED_START_DELAY
         } else {
             result
         }
@@ -58,7 +59,7 @@ class SharedPreferencesService(context: Context) {
     fun readDangerInterval(): Int {
         val result = getInt(DANGER_INTERVAL)
         return if (result == -1) {
-            10
+            Configs.RECOMMENDED_DANGER_INTERVAL
         } else {
             result
         }

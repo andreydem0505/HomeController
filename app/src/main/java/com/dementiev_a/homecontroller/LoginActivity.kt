@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
@@ -54,10 +55,10 @@ class LoginActivity : ComponentActivity() {
         Column (
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Зарегистрируйтесь через Telegram:")
+            Text(text = stringResource(R.string.login_activity_register_using_telegram))
             Link()
-            Text(text = "2) Нажмите start и получите ключ")
-            Text(text = "3) Введите ключ в поле ниже")
+            Text(text = "2) ${stringResource(R.string.login_activity_press_start_and_get_key)}")
+            Text(text = "3) ${stringResource(R.string.login_activity_insert_key_below)}")
         }
     }
 
@@ -75,7 +76,7 @@ class LoginActivity : ComponentActivity() {
                             fontSize = MaterialTheme.typography.body1.fontSize
                         )
                     ) {
-                        append("Перейдите в бота")
+                        append(stringResource(R.string.login_activity_go_to_bot))
                     }
                 },
                 onClick = {
@@ -104,12 +105,12 @@ class LoginActivity : ComponentActivity() {
                                 finish()
                             }
                         } else {
-                            Toast.makeText(applicationContext, "Серверная ошибка", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, getText(R.string.server_error), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             },
-            label = { Text("Ключ") }
+            label = { Text(stringResource(R.string.login_activity_key)) }
         )
     }
 

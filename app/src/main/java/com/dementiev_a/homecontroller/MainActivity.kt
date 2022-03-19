@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,15 +45,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val minScaleCoefficient = 1
-    private val maxScaleCoefficient = 10
-
     @Composable
     private fun Settings() {
         var scaleCoefficient by rememberSaveable { mutableStateOf(sps.readScaleCoefficient().toString()) }
         var startDelay by rememberSaveable { mutableStateOf(sps.readStartDelay().toString()) }
         var dangerInterval by rememberSaveable { mutableStateOf(sps.readDangerInterval().toString()) }
-        val scaleCoefficientValidation = checkIntInRange(minScaleCoefficient..maxScaleCoefficient)
+        val scaleCoefficientValidation = checkIntInRange(Configs.MIN_SCALE_COEFFICIENT..Configs.MAX_SCALE_COEFFICIENT)
         val startDelayValidation = checkIntInRange(0..60)
         val dangerIntervalValidation = checkIntInRange(1..60)
         CenterColumn(verticalArrangement = Arrangement.Center) {
@@ -103,16 +101,13 @@ class MainActivity : ComponentActivity() {
             value = value,
             isError = !inputValidation(value),
             onValueChange = onValueChange,
-            labelText = "Уровень чувствительности",
-            errorText = "Целое число от $minScaleCoefficient до $maxScaleCoefficient",
+            labelText = stringResource(R.string.main_activity_sensitivity_level),
+            errorText = stringResource(R.string.main_activity_integer_from_to, Configs.MIN_SCALE_COEFFICIENT, Configs.MAX_SCALE_COEFFICIENT),
         ) {
             AboutIconButton { openDialog = true }
         }
         if (openDialog) {
-            Alert(text = "Чем меньше значение, тем система будет более чувствительна. " +
-                    "Чувствительность изменяется пропорционально. Так, система со " +
-                    "значением \"4\" в 2 раза чувствительнее чем со " +
-                    "значением \"8\".\nРекомендуемое значение: 3.",
+            Alert(text = stringResource(R.string.main_activity_scale_coefficient_input_alert, Configs.RECOMMENDED_SCALE_COEFFICIENT),
                 onCloseDialog = { openDialog = false }
             )
         }
@@ -128,8 +123,8 @@ class MainActivity : ComponentActivity() {
             value = value,
             isError = !inputValidation(value),
             onValueChange = onValueChange,
-            labelText = "Начальная задержка (в мин.)",
-            errorText = "Допустимые значения: от 0 до 60",
+            labelText = stringResource(R.string.main_activity_start_delay_label),
+            errorText = stringResource(R.string.main_activity_error_not_in_range, 0, 60),
             trailingIcon = {}
         )
     }
@@ -145,16 +140,14 @@ class MainActivity : ComponentActivity() {
             value = value,
             isError = !inputValidation(value),
             onValueChange = onValueChange,
-            labelText = "Промежуток между сигналами (в мин.)",
-            errorText = "Допустимые значения: от 1 до 60"
+            labelText = stringResource(R.string.main_activity_danger_interval_input_alert),
+            errorText = stringResource(R.string.main_activity_error_not_in_range, 1, 60)
         ) {
             AboutIconButton { openDialog = true }
         }
         if (openDialog) {
             Alert(
-                text = "Минимальный временной промежуток, который должен пройти между сигналами о " +
-                        "тревоги с одного датчика. Позволяет избежать получения нескольких сигналов " +
-                        "с одного датчика за короткое время.",
+                text = stringResource(R.string.main_activity_danger_interval_input_alert),
                 onCloseDialog = { openDialog = false }
             )
         }
@@ -220,7 +213,7 @@ class MainActivity : ComponentActivity() {
             enabled = enabled,
             contentPadding = PaddingValues(20.dp, 15.dp)
         ) {
-            Text(text = "Запустить")
+            Text(text = stringResource(R.string.main_activity_start))
         }
     }
 
@@ -248,7 +241,7 @@ class MainActivity : ComponentActivity() {
                             contentColor = MaterialTheme.colors.surface
                         )
                     ) {
-                        Text("OK")
+                        Text(stringResource(R.string.ok))
                     }
                 }
             }

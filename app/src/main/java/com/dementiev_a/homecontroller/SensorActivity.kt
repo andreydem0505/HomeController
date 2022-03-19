@@ -25,16 +25,16 @@ import com.dementiev_a.homecontroller.ui.theme.HomeControllerTheme
 class SensorActivity : ComponentActivity() {
     private lateinit var sensorFactory: SensorFactory
     private val sensorTypes = mapOf(
-        "Освещение" to android.hardware.Sensor.TYPE_LIGHT,
-        "Гироскоп" to android.hardware.Sensor.TYPE_GYROSCOPE,
-        "Влажность" to android.hardware.Sensor.TYPE_RELATIVE_HUMIDITY,
-        "Ускорение" to android.hardware.Sensor.TYPE_ACCELEROMETER,
-        "Вес" to android.hardware.Sensor.TYPE_GRAVITY,
-        "Магнитное поле" to android.hardware.Sensor.TYPE_MAGNETIC_FIELD,
-        "Расстояние" to android.hardware.Sensor.TYPE_PROXIMITY,
-        "Температура" to android.hardware.Sensor.TYPE_AMBIENT_TEMPERATURE,
-        "Движение" to android.hardware.Sensor.TYPE_MOTION_DETECT,
-        "Давление" to android.hardware.Sensor.TYPE_PRESSURE
+        getString(R.string.sensor_light) to android.hardware.Sensor.TYPE_LIGHT,
+        getString(R.string.sensor_gyroscope) to android.hardware.Sensor.TYPE_GYROSCOPE,
+        getString(R.string.sensor_humidity) to android.hardware.Sensor.TYPE_RELATIVE_HUMIDITY,
+        getString(R.string.sensor_accelerometer) to android.hardware.Sensor.TYPE_ACCELEROMETER,
+        getString(R.string.sensor_gravity) to android.hardware.Sensor.TYPE_GRAVITY,
+        getString(R.string.sensor_magnetic_field) to android.hardware.Sensor.TYPE_MAGNETIC_FIELD,
+        getString(R.string.sensor_proximity) to android.hardware.Sensor.TYPE_PROXIMITY,
+        getString(R.string.sensor_temperature) to android.hardware.Sensor.TYPE_AMBIENT_TEMPERATURE,
+        getString(R.string.sensor_motion) to android.hardware.Sensor.TYPE_MOTION_DETECT,
+        getString(R.string.sensor_pressure) to android.hardware.Sensor.TYPE_PRESSURE
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Home Controller</string>
+
+    <string name="login_activity.register_using_telegram">Зарегистрируйтесь через Telegram:</string>
+    <string name="login_activity.go_to_bot">Перейдите в бота</string>
+    <string name="login_activity.press_start_and_get_key">Нажмите start и получите ключ</string>
+    <string name="login_activity.insert_key_below">Введите ключ в поле ниже</string>
+    <string name="login_activity.key">Ключ</string>
+
+    <string name="main_activity.sensitivity_level">Уровень чувствительности</string>
+    <string name="main_activity.integer_from_to">Целое число от %1$d до %2$d</string>
+    <string name="main_activity.scale_coefficient_input_alert">Чем меньше значение, тем система будет более чувствительна. Чувствительность изменяется пропорционально. Так, система со значением "4" в 2 раза чувствительнее чем со значением "8".\nРекомендуемое значение: %1$d."</string>
+    <string name="main_activity.danger_interval_input_alert">Минимальный временной промежуток, который должен пройти между сигналами о тревоги с одного датчика. Позволяет избежать получения нескольких сигналовс одного датчика за короткое время.</string>
+    <string name="main_activity.start_delay_label">Начальная задержка (в мин.)</string>
+    <string name="main_activity.delay_interval_label">Промежуток между сигналами (в мин.)</string>
+    <string name="main_activity.error_not_in_range">Допустимые значения: от %1$d до %2$d</string>
+    <string name="main_activity.start">Запустить</string>
+
+    <string name="server_error">Серверная ошибка</string>
+
+    <string name="sensor.light">Освещение</string>
+    <string name="sensor.gyroscope">Гироскоп</string>
+    <string name="sensor.humidity">Влажность</string>
+    <string name="sensor.accelerometer">Ускорение</string>
+    <string name="sensor.gravity">Вес</string>
+    <string name="sensor.magnetic_field">Магнитное поле</string>
+    <string name="sensor.proximity">Расстояние</string>
+    <string name="sensor.temperature">Температура</string>
+    <string name="sensor.motion">Движение</string>
+    <string name="sensor.pressure">Давление</string>
+</resources>
