@@ -11,7 +11,7 @@
 
     <string name="main_activity.sensitivity_level">Sensitivity level</string>
     <string name="main_activity.integer_from_to">Integer from %1$d to %2$d</string>
-    <string name="main_activity.scale_coefficient_input_alert">The lower the value, the more sensitive the system will be. The sensitivity changes proportionally. So, the system with the value "4" 2 times more sensitive than one with value "8".\nRecommended value is %1$d.</string>
+    <string name="main_activity.scale_coefficient_input_alert">The lower the value, the more sensitive the system will be. The sensitivity changes proportionally. So, the system with the value \"4\" 2 times more sensitive than one with value \"8\".\nRecommended value is %1$d.</string>
     <string name="main_activity.danger_interval_input_alert">Minimal period that is going to pass between anxiety signals from one sensor. It allows to avoid getting several signals during short period.</string>
     <string name="main_activity.start_delay_label">Start delay (min.)</string>
     <string name="main_activity.delay_interval_label">Interval between the signals (min.)</string>
