@@ -15,7 +15,7 @@ import retrofit2.http.POST
 object Requests {
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("https://home-controller-api.herokuapp.com/")
+        .baseUrl("https://home-controller.onrender.com/")
         .build()
 
     private interface Service {
