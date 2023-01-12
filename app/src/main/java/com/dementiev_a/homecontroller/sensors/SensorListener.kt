@@ -4,6 +4,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import com.dementiev_a.homecontroller.requests.Requests
+import java.io.IOException
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
@@ -60,7 +61,9 @@ class SensorListener(private val sensorInfo: SensorInfo) : SensorEventListener {
 
         sensorInfo.onDangerChange(true)
         thread {
-            Requests.notify(Configs.key!!, sensorInfo.name)
+            try {
+                Requests.notify(Configs.key!!, sensorInfo.name)
+            } catch (_: IOException) {}
             Thread.sleep(5_000)
             sensorInfo.onDangerChange(false)
         }
